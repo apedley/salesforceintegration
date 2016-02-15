@@ -7,7 +7,13 @@ var express = require('express'),
   morgan = require('morgan'),
   util = require('util'),
   ForceDotComStrategy = require('passport-forcedotcom').Strategy
-  lazyproxy = require('lazy-proxy');
+  lazyproxy = require('lazy-proxy'),
+  fs = require('fs');
+
+var ssl_options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
 
 var CF_CLIENT_ID = '3MVG9uudbyLbNPZP87L462HahzK4g50qp1INc3XG.FG8dWx1eFnE6WblYYcpjcyMQGBjRb4KNU6yr1sFPjItV';
 var CF_CLIENT_SECRET = '7783851447526722561';
@@ -67,7 +73,7 @@ var ensureAuthenticated = function(req, res, next) {
 }
 
 
-var app = express();
+var app = express(ssl_options);
 
 
 
@@ -159,3 +165,4 @@ app.get('/list', ensureAuthenticated, function(req, res){
 });
 
 app.listen(3000);
+console.log('App running on port 3000')
